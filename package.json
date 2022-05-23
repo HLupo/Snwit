@@ -1,0 +1,11 @@
+{
+  "name": "Snwit",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:HLupo/Snwit.git",
+  "author": "Hugo Lupo <hugo.lupo@epitech.eu>",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.6.4"
+  }
+}
