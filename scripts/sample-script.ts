@@ -1,5 +1,5 @@
-import { run } from "hardhat";
-import { ethers } from "@nomiclabs/hardhat-ethers";
+import { ethers, run } from "hardhat";
+
 async function main() {
   await run("compile");
 
