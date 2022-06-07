@@ -84,15 +84,15 @@ export const App: React.FC = () => {
 
   return (
     <div >
-      {currentAccount == null && <button onClick={() => connectWalletHandler()}><span>Connect</span></button>}
-      {currentAccount && <h1>Connected with address {currentAccount}</h1>}
-      <button onClick={() => test()}><span>Check balance</span></button>
+      {currentAccount == null && <button onClick={() => connectWalletHandler()}><span>{"Connect"}</span></button>}
+      {currentAccount && <h1>{"Connected with address "}{currentAccount}</h1>}
+      <button onClick={() => test()}><span>{"Check balance"}</span></button>
       <div style={{ display: "flex", flexDirection: "row", }}>
-        <span style={{ marginRight: 5 }}>Send MHT to :</span>
+        <span style={{ marginRight: 5 }}>{"Send MHT to :"}</span>
         <input style={{}} onChange={(e) => setSendAddress(e.target.value)}></input>
-        <span style={{ marginLeft: 5 }}>Amount : </span>
+        <span style={{ marginLeft: 5 }}>{"Amount : "}</span>
         <input style={{ marginLeft: 5 }} onChange={(e) => setAmount(e.target.value)}></input>
-        <button style={{ marginLeft: 5 }} onClick={() => sendToken()}>Send</button>
+        <button style={{ marginLeft: 5 }} onClick={() => sendToken()}>{"Send"}</button>
       </div>
     </div>
   )

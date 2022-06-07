@@ -1,4 +1,4 @@
-import App from './App';
+import { Accueil } from './views/Accueil';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 import { ChakraProvider } from "@chakra-ui/react";
@@ -8,7 +8,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <ChakraProvider>
-    <App />
+    <Accueil />
   </ChakraProvider>
 );
 
