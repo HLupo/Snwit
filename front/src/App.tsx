@@ -9,7 +9,6 @@ export const App: React.FC = () => {
   const [sendAddress, setSendAddress] = useState("");
   const [sendAmount, setAmount] = useState("");
 
-
   const checkWallet = async () => {
     const { ethereum } = window;
 
