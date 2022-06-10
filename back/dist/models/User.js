@@ -61,14 +61,7 @@ userSchema.methods.comparePassword = function (candidatePassword) {
 //find user by email
 userSchema.methods.findByEmail = function (email) {
     return __awaiter(this, void 0, void 0, function* () {
-        const user = yield this.findOne({ email: email });
-        return user;
-    });
-};
-// find user by email and password
-userSchema.methods.findByEmailAndPassword = function (email, password) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const user = yield this.findOne({ email: email, password: password });
+        const user = yield exports.User.findOne({ email: email });
         return user;
     });
 };
@@ -76,6 +69,27 @@ userSchema.methods.findByEmailAndPassword = function (email, password) {
 userSchema.methods.findByAddress = function (address) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = yield exports.User.findOne({ address: address });
+        return user;
+    });
+};
+// find user by email and password
+userSchema.methods.findByEmailAndPassword = function (email, password) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const user = yield exports.User.findOne({ email: email, password: password });
+        return user;
+    });
+};
+// find user by address and email
+userSchema.methods.findByAddressAndEmail = function (address, email) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const user = yield exports.User.findOne({ address: address, email: email });
+        return user;
+    });
+};
+// find user by address or email
+userSchema.methods.findByAddressOrEmail = function (address, email) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const user = yield exports.User.findOne({ $or: [{ address: address }, { email: email }] });
         return user;
     });
 };

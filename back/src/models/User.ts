@@ -9,7 +9,9 @@ export interface IUser {
     comparePassword(candidatePassword: string): Promise<boolean>;
     findByEmail(email: string): Promise<IUser>;
     findByAddress(address: string): Promise<IUser>;
+    findByAddressAndEmail(address: string, email: string): Promise<IUser>;
     findByEmailAndPassword(email: string, password: string): Promise<IUser>;
+    findByAddressOrEmail(address: string, email: string): Promise<IUser>;
 }
 
 const userSchema = new Schema({
@@ -54,13 +56,7 @@ userSchema.methods.comparePassword = async function (candidatePassword: string) 
 
 //find user by email
 userSchema.methods.findByEmail = async function (email: string) {
-    const user = await this.findOne({ email: email });
-    return user;
-}
-
-// find user by email and password
-userSchema.methods.findByEmailAndPassword = async function (email: string, password: string) {
-    const user = await this.findOne({ email: email, password: password });
+    const user = await User.findOne({ email: email });
     return user;
 }
 
@@ -69,5 +65,24 @@ userSchema.methods.findByAddress = async function (address: string) {
     const user = await User.findOne({ address: address });
     return user;
 }
+
+// find user by email and password
+userSchema.methods.findByEmailAndPassword = async function (email: string, password: string) {
+    const user = await User.findOne({ email: email, password: password });
+    return user;
+}
+
+// find user by address and email
+userSchema.methods.findByAddressAndEmail = async function (address: string, email: string) {
+    const user = await User.findOne({ address: address, email: email });
+    return user;
+}
+
+// find user by address or email
+userSchema.methods.findByAddressOrEmail = async function (address: string, email: string) {
+    const user = await User.findOne({ $or: [{ address: address }, { email: email }] });
+    return user;
+}
+
 
 export const User = model<IUser>('User', userSchema);
