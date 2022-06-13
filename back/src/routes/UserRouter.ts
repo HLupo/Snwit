@@ -9,8 +9,6 @@ router.get("/user", (req, res) => {
 });
 
 // Post create user
-
-
 router.post("/createUser", (req, res) => {
     const user = new User({
         address: req.body.address,
@@ -18,7 +16,16 @@ router.post("/createUser", (req, res) => {
         password: req.body.password
     })
 
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[:!@#;,\$%\^&\*\\])(?=.{8,})/;
+
     if (user.address && user.email && user.password) {
+        if (!passwordRegex.test(user.password)) {
+            res.statusCode = 400;
+            res.statusMessage = "Password must be at least 8 characters, contain at least one lowercase letter, one uppercase letter, one number and one special character";
+            console.log("Password must be at least 8 characters, contain at least one lowercase letter, one uppercase letter, one number and one special character");
+            res.send("Password is not strong enough");
+        }
+
         user.findByAddressOrEmail(user.address, user.email).then((results) => {
             if (results) {
                 res.statusCode = 400;

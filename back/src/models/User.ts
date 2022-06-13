@@ -6,12 +6,12 @@ export interface IUser {
     email: string;
     password: string;
 
-    comparePassword(candidatePassword: string): Promise<boolean>;
     findByEmail(email: string): Promise<IUser>;
     findByAddress(address: string): Promise<IUser>;
+    comparePassword(candidatePassword: string): Promise<boolean>;
+    findByAddressOrEmail(address: string, email: string): Promise<IUser>;
     findByAddressAndEmail(address: string, email: string): Promise<IUser>;
     findByEmailAndPassword(email: string, password: string): Promise<IUser>;
-    findByAddressOrEmail(address: string, email: string): Promise<IUser>;
 }
 
 const userSchema = new Schema({
@@ -22,6 +22,7 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: true,
+        select: false,
     },
     address: {
         type: String,
@@ -83,6 +84,5 @@ userSchema.methods.findByAddressOrEmail = async function (address: string, email
     const user = await User.findOne({ $or: [{ address: address }, { email: email }] });
     return user;
 }
-
 
 export const User = model<IUser>('User', userSchema);
