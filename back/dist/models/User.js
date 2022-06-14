@@ -20,6 +20,10 @@ const userSchema = new mongoose_1.Schema({
         type: String,
         required: true,
     },
+    username: {
+        type: String,
+        required: true,
+    },
     password: {
         type: String,
         required: true,
@@ -91,6 +95,13 @@ userSchema.methods.findByAddressAndEmail = function (address, email) {
 userSchema.methods.findByAddressOrEmail = function (address, email) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = yield exports.User.findOne({ $or: [{ address: address }, { email: email }] });
+        return user;
+    });
+};
+// find user by address or email or username
+userSchema.methods.findByAddressOrEmailOrUsername = function (address, email, username) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const user = yield exports.User.findOne({ $or: [{ address: address }, { email: email }, { username: username }] });
         return user;
     });
 };

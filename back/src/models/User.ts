@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 export interface IUser {
     address: string;
     email: string;
+    username: string;
     password: string;
 
     findByEmail(email: string): Promise<IUser>;
@@ -12,10 +13,15 @@ export interface IUser {
     findByAddressOrEmail(address: string, email: string): Promise<IUser>;
     findByAddressAndEmail(address: string, email: string): Promise<IUser>;
     findByEmailAndPassword(email: string, password: string): Promise<IUser>;
+    findByAddressOrEmailOrUsername(address: string, email: string, username: string): Promise<IUser>;
 }
 
 const userSchema = new Schema({
     email: {
+        type: String,
+        required: true,
+    },
+    username: {
         type: String,
         required: true,
     },
@@ -82,6 +88,12 @@ userSchema.methods.findByAddressAndEmail = async function (address: string, emai
 // find user by address or email
 userSchema.methods.findByAddressOrEmail = async function (address: string, email: string) {
     const user = await User.findOne({ $or: [{ address: address }, { email: email }] });
+    return user;
+}
+
+// find user by address or email or username
+userSchema.methods.findByAddressOrEmailOrUsername = async function (address: string, email: string, username: string) {
+    const user = await User.findOne({ $or: [{ address: address }, { email: email }, { username: username }] });
     return user;
 }
 

@@ -1,10 +1,8 @@
 import { Button, Flex, Heading } from "@chakra-ui/react"
 import { useDispatch, useSelector } from "react-redux"
-import { decrement, increment } from "store/slices/CounterSlice";
 import { RootState } from "../store/store";
 
 export const Accueil = () => {
-    const count = useSelector((state: RootState) => state.counter.value)
     const dispatch = useDispatch();
 
     const createUser = async () => {
@@ -15,7 +13,7 @@ export const Accueil = () => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                address: '0x1234567890123456789012345678901234567890',
+                address: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
                 email: 'xtekaa@gmail.com',
                 password: ":1a2b3c4D",
             })
@@ -23,20 +21,8 @@ export const Accueil = () => {
 
         if (res.status === 200) {
             const data = await res.json();
-            console.log(data);
-            dispatch(increment());
-        } else {
-            console.log(res)
-            dispatch(decrement());
+
         }
-    }
-
-    const up = () => {
-        dispatch(increment());
-    }
-
-    const down = () => {
-        dispatch(decrement());
     }
 
     return (
@@ -50,9 +36,7 @@ export const Accueil = () => {
                 <Button onClick={() => createUser()}>
                     {"Create user"}
                 </Button>
-                <Button onClick={() => up()}>{"increment"}</Button>
-                <Button onClick={() => down()}>{"decrement"}</Button>
-                <h1>{count}</h1>
+
             </Flex>
 
         </>

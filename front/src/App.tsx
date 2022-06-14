@@ -3,52 +3,21 @@ import { CONTRACT_ADRESS, TOKEN_FACTORY } from "./Globals"
 import { Contract, ethers } from "ethers";
 import { Token } from "./typechain-types";
 import { MetamaskRequired } from "components/MetamaskRequired";
+import { ConnectAccount } from "components/ConnectAccount";
+import { useSelector } from "react-redux";
+import { RootState } from "store/store";
+import { User } from "store/slices/userSlice";
+import { SignUp } from "components/SignUp";
+import { Box, Flex } from "@chakra-ui/layout";
 
 export const App: React.FC = () => {
 
-  const [currentAccount, setCurrentAccount] = useState(null);
+  const currentAccount = useSelector((state: RootState) => state.user.currentAccount);
   const [sendAddress, setSendAddress] = useState("");
   const [sendAmount, setAmount] = useState("");
   const [ethereum, setEthereum] = useState(false);
-
-  const testaa = async () => {
-    const { ethereum } = window;
-
-    ethereum.request({ method: "eth_requestAccounts" }).then(async (accounts: any) => {
-      console.log(accounts);
-    }).catch(async (error: any) => {
-      console.log(error);
-    })
-  }
-
-  // Check if Metamask is installed on the browser.
-  const getWallet = async () => {
-    const { ethereum } = window;
-
-    const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-
-
-    if (accounts.length !== 0) {
-      console.log("Accounts length", accounts.length);
-      console.log("Accounts: ", accounts);
-      const account = accounts[0];
-      setCurrentAccount(account);
-      return;
-    } else console.log("No auth account found")
-  }
-
-  const connectWalletHandler = async () => {
-    const { ethereum } = window;
-
-    if (!ethereum)
-      console.log("no metamask")
-
-    try {
-      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-      console.log("Account found: " + accounts[0]);
-      setCurrentAccount(accounts[0]);
-    } catch (err) { console.log(err); }
-  }
+  const connected = useSelector((state: RootState) => state.user.connected);
+  const user: User | null = useSelector((state: RootState) => state.user.user);
 
   const test = async () => {
     const { ethereum } = window;
@@ -91,18 +60,19 @@ export const App: React.FC = () => {
   useEffect(() => {
     const { ethereum } = window;
     // Check if Metamask is installed on the browser.
-    if (ethereum.isMetaMask) {
+    if (ethereum && ethereum.isMetaMask) {
       setEthereum(true);
     }
   }, [])
 
   return (
-    <>
+    <Flex width={"100vw"} height={"100vh"} backgroundColor={"lightpink"} flexDir={"row"}>
       {!ethereum && <MetamaskRequired />}
-      {ethereum &&
+      {ethereum && !connected && <ConnectAccount />}
+      {ethereum && connected && !user && <SignUp />}
+      {ethereum && connected && user &&
         <div>
-          {currentAccount == null && <button onClick={() => connectWalletHandler()}><span>{"Connect"}</span></button>}
-          {currentAccount && <h1>{"Connected with address "}{currentAccount}</h1>}
+          {<h1>{"Connected with address "}{currentAccount}</h1>}
           <button onClick={() => test()}><span>{"Check balance"}</span></button>
           <div style={{ display: "flex", flexDirection: "row", }}>
             <span style={{ marginRight: 5 }}>{"Send MHT to :"}</span>
@@ -112,7 +82,7 @@ export const App: React.FC = () => {
             <button style={{ marginLeft: 5 }} onClick={() => sendToken()}>{"Send"}</button>
           </div>
         </div>}
-    </>
+    </Flex>
   )
 }
 

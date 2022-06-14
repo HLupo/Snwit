@@ -10,16 +10,6 @@ const port = 8080; // default port to listen
 
 require('dotenv').config();
 
-app.use(cors());
-app.use(express.json());
-
-app.use("/", UserRouter);
-
-// define a route handler for the default home page
-app.get("/", (req, res) => {
-    res.send("Hello world!");
-});
-
 mongoose.connect(process.env.MONGO_URI)
     .then((res) =>
         app.listen(port, () => {
@@ -27,3 +17,8 @@ mongoose.connect(process.env.MONGO_URI)
         }))
     .catch((err) => console.log(err))
 
+
+app.use(cors());
+app.use(express.json());
+
+app.use("/", UserRouter);
