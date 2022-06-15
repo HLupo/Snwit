@@ -30,7 +30,7 @@ export const ConnectAccount = () => {
         if (user) dispatch(setUser(user));
         dispatch(setCurrentAccount(accounts[0]));
         ethereum.on("accountsChanged", async (accounts: string) => {
-            dispatch(setCurrentAccount(accounts));
+            dispatch(setCurrentAccount(accounts[0]));
             if (accounts && accounts != undefined) {
                 const user: User = await getUserByAddress(accounts);
                 if (user) dispatch(setUser(user));
@@ -41,9 +41,9 @@ export const ConnectAccount = () => {
     };
 
     return (
-        <Flex>
+        <Flex flexDir={"column"} justifyContent={"center"} alignItems={"center"} width={"100%"}>
             <Heading>{"Please connect your Metamask account"}</Heading>
-            <Button onClick={() => connectWalletHandler()}>{"Connect with Metamask"}</Button>
+            <Button marginTop={2} onClick={() => connectWalletHandler()}>{"Connect with Metamask"}</Button>
         </Flex>
     )
 }

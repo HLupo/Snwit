@@ -25,6 +25,11 @@ export const SignUp = () => {
     const currentAccount = useSelector((state: RootState) => state.user.currentAccount);
 
     const createUser = async (address: string, email: string, password: string, username: string) => {
+        console.log("address = ", address);
+        console.log("email = ", email);
+        console.log("password = ", password);
+        console.log("username = ", username);
+
         const res = await fetch('http://localhost:8080/createUser', {
             method: 'POST',
             headers: {

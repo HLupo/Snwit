@@ -19,7 +19,7 @@ export const MetamaskRequired = () => {
 
     }
     return (
-        <Flex flexDir={"column"} margin={5} justifyContent={"center"} alignItems={"center"} backgroundColor={"red.100"} width={"100%"} height={"100%"}>
+        <Flex flexDir={"column"} margin={5} justifyContent={"center"} alignItems={"center"} width={"100%"} height={"100%"}>
             <Heading>{"Metamask Required"}</Heading>
             {!onBoard && <Button margin={2} onClick={() => startOnBoarding()} disabled={onBoard}>{"Download Metamask"}</Button>}
         </Flex>

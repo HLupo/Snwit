@@ -18,7 +18,7 @@ router.post("/createUser", (req, res) => {
     })
 
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[:!@#;,\$%\^&\*\\])(?=.{8,})/;
-
+    console.log(user);
     if (user.address && user.email && user.password && user.username) {
         if (!passwordRegex.test(user.password)) {
             res.statusCode = 400;

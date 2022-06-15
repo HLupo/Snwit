@@ -66,7 +66,7 @@ export const App: React.FC = () => {
   }, [])
 
   return (
-    <Flex width={"100vw"} height={"100vh"} backgroundColor={"lightpink"} flexDir={"row"}>
+    <Flex width={"100vw"} height={"100vh"} flexDir={"row"}>
       {!ethereum && <MetamaskRequired />}
       {ethereum && !connected && <ConnectAccount />}
       {ethereum && connected && !user && <SignUp />}
@@ -76,9 +76,9 @@ export const App: React.FC = () => {
           <button onClick={() => test()}><span>{"Check balance"}</span></button>
           <div style={{ display: "flex", flexDirection: "row", }}>
             <span style={{ marginRight: 5 }}>{"Send MHT to :"}</span>
-            <input style={{}} onChange={(e) => setSendAddress(e.target.value)}></input>
+            <input style={{ backgroundColor: "lightpink" }} onChange={(e) => setSendAddress(e.target.value)}></input>
             <span style={{ marginLeft: 5 }}>{"Amount : "}</span>
-            <input style={{ marginLeft: 5 }} onChange={(e) => setAmount(e.target.value)}></input>
+            <input style={{ marginLeft: 5, backgroundColor: "lightpink" }} onChange={(e) => setAmount(e.target.value)}></input>
             <button style={{ marginLeft: 5 }} onClick={() => sendToken()}>{"Send"}</button>
           </div>
         </div>}
