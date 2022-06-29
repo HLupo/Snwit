@@ -1,9 +1,6 @@
 import { Button, Flex, Heading } from "@chakra-ui/react"
-import { useDispatch, useSelector } from "react-redux"
-import { RootState } from "../store/store";
 
 export const Accueil = () => {
-    const dispatch = useDispatch();
 
     const createUser = async () => {
         const res = await fetch('http://localhost:8080/createUser', {
@@ -21,7 +18,7 @@ export const Accueil = () => {
 
         if (res.status === 200) {
             const data = await res.json();
-
+            console.log(data);
         }
     }
 

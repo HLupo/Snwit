@@ -1,10 +1,14 @@
-import { setCurrentAccount, setUser, User } from "store/slices/userSlice";
+import { setUser, User } from "store/slices/userSlice";
 import { Flex, Heading } from "@chakra-ui/layout"
 import { Button } from "@chakra-ui/button";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentMetamaskAccount } from "store/slices/appSlice";
+import { Navigate } from "react-router";
+import { RootState } from "store/store";
 
 export const ConnectAccount = () => {
     const dispatch = useDispatch();
+    const account = useSelector((state: RootState) => state.app.currentMetamaskAccount);
 
     const getUserByAddress = async (address: string) => {
         const res = await fetch('http://localhost:8080/getUserByAddress/' + address, {
@@ -28,23 +32,20 @@ export const ConnectAccount = () => {
 
         const user: User = await getUserByAddress(accounts[0]);
         if (user) dispatch(setUser(user));
-        dispatch(setCurrentAccount(accounts[0]));
-        ethereum.on("accountsChanged", async (accounts: string) => {
-            dispatch(setCurrentAccount(accounts[0]));
-            if (accounts && accounts != undefined) {
-                const user: User = await getUserByAddress(accounts);
-                if (user) dispatch(setUser(user));
-                else dispatch(setUser(null));
-            }
-            console.log("Accounts changed: " + accounts[0]);
-        });
+        dispatch(setCurrentMetamaskAccount(accounts[0]));
     };
 
+
     return (
-        <Flex flexDir={"column"} justifyContent={"center"} alignItems={"center"} width={"100%"}>
-            <Heading>{"Please connect your Metamask account"}</Heading>
-            <Button marginTop={2} onClick={() => connectWalletHandler()}>{"Connect with Metamask"}</Button>
-        </Flex>
+        <>
+            {(!account || account === "") &&
+                <Flex flexDir={"column"} justifyContent={"center"} alignItems={"center"} width={"100%"}>
+                    <Heading>{"Please connect your Metamask account"}</Heading>
+                    <Button marginTop={2} onClick={() => connectWalletHandler()}>{"Connect with Metamask"}</Button>
+                </Flex>}
+            {(account && account !== "") && <Navigate to={"/"} replace={true} />}
+
+        </>
     )
 }
 
