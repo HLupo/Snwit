@@ -2,8 +2,10 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { FC, ReactNode, useEffect } from 'react';
 
-import { clearUserState } from 'store/slices/userSlice';
-import { clearAppState } from 'store/slices/appSlice';
+import { purgeUserState } from 'store/slices/userSlice';
+import { purgePostState } from 'store/slices/postSlice';
+import { purgeAppState } from 'store/slices/appSlice';
+
 import { RootState } from 'store/store';
 
 import { MetamaskRequired } from 'components/MetamaskRequired';
@@ -55,9 +57,11 @@ const PurgeComp: FC = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(clearUserState());
-        dispatch(clearAppState());
+        dispatch(purgeUserState());
+        dispatch(purgeAppState());
+        dispatch(purgePostState());
     });
+
     return <></>
 }
 
@@ -72,7 +76,7 @@ export const Router = () => {
                     <Route path={"/nft"} element={<NftView />} />
                     <Route path={"/lists"} element={<Lists />} />
 
-                    <Route path={"/user/:id"} element={<UserProfile />} />
+                    <Route path={"/user/:userAddress"} element={<UserProfile />} />
                 </Route>
                 <Route path={"metamask-required"} element={<MetamaskRequired />} />
                 <Route path={"connect-metamask-account"} element={<RequireMetamask><ConnectAccount /></RequireMetamask>} />

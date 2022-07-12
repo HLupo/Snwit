@@ -24,13 +24,13 @@ export const userSlice = createSlice({
         setUser: (state, action: PayloadAction<User | null>) => {
             state.user = action.payload;
         },
-        clearUserState: (state) => {
+        purgeUserState: (state) => {
             state.user = null;
-        }
+        },
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { setUser, clearUserState } = userSlice.actions
+export const { setUser, purgeUserState } = userSlice.actions
 
 export default userSlice.reducer

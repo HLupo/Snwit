@@ -4,14 +4,12 @@ export interface appState {
     metamaskInstalled: boolean
     currentMetamaskAccount: string
     selectedNav: string
-    refreshPosts: boolean
 }
 
 const initialState: appState = {
-    metamaskInstalled: false,
     currentMetamaskAccount: "",
+    metamaskInstalled: false,
     selectedNav: "Home",
-    refreshPosts: false,
 }
 
 export const appSlice = createSlice({
@@ -24,22 +22,19 @@ export const appSlice = createSlice({
         setCurrentMetamaskAccount: (state, action: PayloadAction<string>) => {
             state.currentMetamaskAccount = action.payload
         },
-        clearAppState: (state) => {
-            state.metamaskInstalled = false
-            state.currentMetamaskAccount = ""
-            state.selectedNav = "Home"
-            state.refreshPosts = false
-        },
+
         setSelectedNav: (state, action: PayloadAction<string>) => {
             state.selectedNav = action.payload
         },
-        setRefreshPosts: (state, action: PayloadAction<boolean>) => {
-            state.refreshPosts = action.payload
-        }
+        purgeAppState: (state) => {
+            state.currentMetamaskAccount = ""
+            state.metamaskInstalled = false
+            state.selectedNav = "Home"
+        },
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { setMetamaskInstalled, setCurrentMetamaskAccount, clearAppState, setSelectedNav, setRefreshPosts } = appSlice.actions
+export const { setMetamaskInstalled, setCurrentMetamaskAccount, setSelectedNav, purgeAppState } = appSlice.actions
 
 export default appSlice.reducer

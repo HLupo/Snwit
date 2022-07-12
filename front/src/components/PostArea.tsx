@@ -1,28 +1,34 @@
-import { FC, useState } from 'react'
-import { Flex, Text } from "@chakra-ui/layout"
-import { Button, Image, Spinner } from '@chakra-ui/react'
-
-import AutoResizeTextArea from "./AutoResizeTextArea";
-import { User } from 'store/slices/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'store/store';
-import { setRefreshPosts } from 'store/slices/appSlice';
 import { useNavigate } from 'react-router';
+import { FC, useState } from 'react'
 
+import { Button, Image, Spinner } from '@chakra-ui/react'
+import { Flex, Text } from "@chakra-ui/layout"
 
-const PostArea: FC = () => {
+// import { setRefreshPosts } from 'store/slices/postSlice';
+import { User } from 'store/slices/userSlice';
+import { Post, addPost } from 'store/slices/postSlice';
+import { RootState } from 'store/store';
+
+import { AutoResizeTextArea } from "./AutoResizeTextArea";
+
+export const PostArea: FC = () => {
     const user: User | null = useSelector((state: RootState) => state.user.user);
-    const [value, setValue] = useState("");
     const [lengthError, setLengthError] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [value, setValue] = useState("");
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    if (!user) { console.error("Error in PostArea: user is null"); return null; }
 
     const createPost = async (content: string) => {
         if (content.length <= 0 || content.length > 140 || loading) return;
 
         setLoading(true);
-        console.log(user)
+        console.log("Creating post...");
+
         const res = await fetch('http://localhost:8080/post', {
             method: 'POST',
             headers: {
@@ -30,25 +36,26 @@ const PostArea: FC = () => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                title: 'test',
                 content: content,
                 authorAddress: user?.address,
                 authorId: user?._id,
             })
-        }).finally(() => { setLoading(false); dispatch(setRefreshPosts(true)) });
+        }).finally(() => {
+            setLoading(false);
+            // dispatch(setRefreshPosts(true));
+        });
 
         if (res.status === 200) {
-            const data = await res.json();
-            console.log(data);
+            const data: Post = await res.json();
+            console.log("Post created:", data);
             setValue("");
+            dispatch(addPost(data));
         }
-        else console.log("Error");
+        else console.error("Error in PostArea: createPost:", res.status);
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        if (e.target.value.length > 140) { setLengthError(true); return; }
-        if (lengthError && e.target.value.length <= 140)
-            setLengthError(false);
+        setLengthError(e.target.value.length > 140);
         setValue(e.target.value);
     }
 
@@ -56,42 +63,43 @@ const PostArea: FC = () => {
         <Flex flexDir={"column"} width={"100%"} padding={"0.5em"} borderBottom={"1px"} borderColor={"lightgray"}>
             <Flex flexDir={"row"} width={"100%"} >
                 <Image
-                    borderRadius={"full"}
-                    border={"1px"}
-                    borderColor={"lightgray"}
                     shadow={"md"}
+                    border={"1px"}
                     boxSize={"96px"}
-                    src={"https://bit.ly/dan-abramov"}
-                    alt={"Dan Abramov"}
-                    onClick={() => navigate("/user/" + user?._id)}
+                    alt={"User avatar"}
+                    borderRadius={"full"}
+                    borderColor={"lightgray"}
                     _hover={{ cursor: "pointer" }}
+                    src={"https://robohash.org/" + user?.address}
+                    onClick={() => navigate("/user/" + user?.address, { state: { profileId: user?._id } })}
                 />
                 <AutoResizeTextArea
-                    alignSelf={"center"}
-                    placeholder={"What's happening?"}
+                    shadow={"sm"}
+                    value={value}
+                    fontSize={"xl"}
                     marginLeft={"0.5em"}
+                    isReadOnly={loading}
+                    alignSelf={"center"}
                     marginRight={"0.5em"}
                     marginBottom={"0.5em"}
-                    fontSize={"xl"}
-                    value={value}
-                    shadow={"sm"}
-                    isReadOnly={loading}
                     onChange={handleChange}
                     isInvalid={lengthError}
+                    placeholder={"What's happening?"}
                     focusBorderColor={lengthError ? "red" : ""} />
             </Flex>
             <Flex alignItems={"center"}>
-                <Text marginLeft={"auto"} marginRight={"1em"} fontSize={"md"} color={value.length >= 140 ? (value.length == 140 ? "orange" : "red") : "black"}>{value.length + " / 140"}</Text>
-
+                <Text marginLeft={"auto"} marginRight={"1em"} fontSize={"md"} color={value.length >= 140 ? (value.length == 140 ? "orange" : "red") : "black"}>
+                    {value.length + " / 140"}
+                </Text>
                 <Button
-                    marginRight={"1.25em"}
-                    width={"15%"}
                     size={"md"}
+                    width={"15%"}
+                    shadow={"sm"}
+                    marginRight={"1.25em"}
                     borderLeftRadius={"25px"}
                     borderRightRadius={"25px"}
-                    shadow={"sm"}
-                    disabled={value.length <= 0 || value.length > 140 || loading}
                     onClick={() => createPost(value)}
+                    disabled={value.length <= 0 || value.length > 140 || loading}
                 >
                     {loading ? <Spinner /> : "Post"}
                 </Button>

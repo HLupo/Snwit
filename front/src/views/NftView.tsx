@@ -7,6 +7,7 @@ import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, Modal
 import { NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper } from '@chakra-ui/number-input';
 import AutoResizeTextArea from 'components/AutoResizeTextArea';
 import Content from 'components/Content';
+import HeaderBar from 'components/HeaderBar';
 import { useAsync } from 'components/hooks';
 import PostArea from 'components/PostArea';
 import { ethers, Contract } from 'ethers';
@@ -316,9 +317,7 @@ export const NftView: FC = () => {
 
     return (
         <Flex flex={1} flexDir={"column"} overflow={"auto"}>
-            <Box borderBottom={"1px"} borderColor={"lightgray"} padding={"0.5em"} shadow={"sm"}>
-                <Heading size={"lg"}>{"NFT"}</Heading >
-            </Box>
+            <HeaderBar title={"NFT"} />
             <Flex flexDir={"column"} margin={"1em"} border={"1px"} borderRadius={"10px"} borderColor={"lightgray"} shadow={"md"} backgroundColor={"seashell"}>
                 <Heading size={"lg"} margin={"0.5em"}>{"My NFT collection"}</Heading>
                 <Stack spacing={4} margin={"1em"}>

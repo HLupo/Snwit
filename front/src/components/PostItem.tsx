@@ -2,6 +2,7 @@ import { Divider, Flex, HStack } from '@chakra-ui/layout'
 import { FC, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { User } from 'store/slices/userSlice'
+import { Post } from 'store/slices/postSlice'
 import { RootState } from 'store/store';
 import { Text, Box } from '@chakra-ui/layout'
 import { Button, } from '@chakra-ui/button';
@@ -16,16 +17,6 @@ import { ethers, Contract } from 'ethers';
 import { CONTRACT_ADRESS, TOKEN_FACTORY } from 'Globals';
 import { Token } from 'typechain-types';
 
-export interface Post {
-    _id: string;
-    authorId: string;
-    authorAddress: string;
-    content: string;
-    createdAt: string;
-    likes: string[];
-    retweets: string[];
-    comments: string[];
-}
 
 export const PostItem: FC<Post> = (post) => {
     const user: User | null = useSelector((state: RootState) => state.user.user);
@@ -46,8 +37,7 @@ export const PostItem: FC<Post> = (post) => {
             const myContract = new Contract(CONTRACT_ADRESS, TOKEN_FACTORY.interface, signer) as Token;
             setIsTiping(true);
             const res = await myContract.transfer(address, 100);
-            res.wait().then(() => { window.location.reload() });
-
+            res.wait().then(() => { setIsTiping(false); window.location.reload(); });
         }
     };
 
@@ -91,9 +81,6 @@ export const PostItem: FC<Post> = (post) => {
 
     useAsync(async (isActive) => {
         if (isActive()) {
-            console.log("Hello!!!")
-            console.log(user)
-            console.log(post.likes)
             if (!user) { setIsLike(false); return; }
             if (post.likes.includes(user._id)) setIsLike(true);
             else setIsLike(false);
@@ -103,7 +90,6 @@ export const PostItem: FC<Post> = (post) => {
     return (
         <Box border={"1px"} shadow={"md"} borderColor={"lightgray"} maxW={"650px"} minW={"650px"} borderRightRadius={"25px"} borderLeftRadius={"25px"}>
             <Flex alignItems={"center"} flex={1}>
-
                 <Image
                     borderRadius={"full"}
                     border={"1px"}
@@ -111,9 +97,9 @@ export const PostItem: FC<Post> = (post) => {
                     shadow={"md"}
                     boxSize={"64px"}
                     margin={"0.5em"}
-                    src={"https://bit.ly/dan-abramov"}
+                    src={"https://robohash.org/" + post.authorAddress}
                     alt={"Dan Abramov"}
-                    onClick={() => navigate("/user/" + post.authorId)}
+                    onClick={() => { console.log("Before navigate:", post.authorId); navigate("/user/" + post.authorAddress, { state: post.authorId }) }}
                     _hover={{ cursor: "pointer" }}
                 />
                 <Flex flexDir={"column"} overflow={"auto"}>
@@ -130,7 +116,7 @@ export const PostItem: FC<Post> = (post) => {
                         <Button isLoading={isLoading} shadow={"md"} rightIcon={<AiFillHeart />} size={"md"} aria-label={'like'} color={isLike ? "red" : ""} onClick={() => { changeLike() }} ><Text>{post.likes.length}</Text></Button>
                         <Button shadow={"md"} rightIcon={<BsChatDots />} size={"md"} aria-label={'comments'}><Text>{"0"}</Text></Button>
                         <Button shadow={"md"} rightIcon={<AiOutlineRetweet />} size={"md"} aria-label={'retweet'}><Text>{"0"}</Text></Button>
-                        <Button shadow={"md"} rightIcon={<AiFillDollarCircle />} size={"md"} aria-label={'retweet'} onClick={() => tipAuthor(post.authorAddress)}><Text justifyContent={"center"}>{"100"}</Text></Button>
+                        <Button isLoading={isTiping} shadow={"md"} rightIcon={<AiFillDollarCircle />} size={"md"} aria-label={'retweet'} onClick={() => tipAuthor(post.authorAddress)}><Text justifyContent={"center"}>{"100"}</Text></Button>
                     </HStack>
                 </HStack>
             </Flex>
