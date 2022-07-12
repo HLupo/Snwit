@@ -5,6 +5,8 @@ export type User = {
     address: string;
     email: string;
     username: string;
+    bio: string;
+    pseudo: string;
 };
 
 export interface UserState {

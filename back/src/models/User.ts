@@ -1,11 +1,14 @@
 import { Schema, model } from "mongoose";
 import bcrypt from "bcryptjs";
+import { Post } from "./Post";
 
 export interface IUser {
     address: string;
     email: string;
     username: string;
     password: string;
+    bio: string;
+    pseudo: string;
 
     findByEmail(email: string): Promise<IUser>;
     findByAddress(address: string): Promise<IUser>;
@@ -14,6 +17,9 @@ export interface IUser {
     findByAddressAndEmail(address: string, email: string): Promise<IUser>;
     findByEmailAndPassword(email: string, password: string): Promise<IUser>;
     findByAddressOrEmailOrUsername(address: string, email: string, username: string): Promise<IUser>;
+    populatePosts(): Promise<IUser>;
+    setBio(bio: string): Promise<IUser>;
+    findById(id: string): Promise<IUser>;
 }
 
 const userSchema = new Schema({
@@ -33,6 +39,14 @@ const userSchema = new Schema({
     address: {
         type: String,
         required: true,
+    },
+    pseudo: {
+        type: String,
+        default: null,
+    },
+    bio: {
+        type: String,
+        default: null
     },
 });
 
@@ -60,6 +74,13 @@ userSchema.methods.comparePassword = async function (candidatePassword: string) 
         throw new Error(err);
     }
 };
+
+// set user bio 
+userSchema.methods.setBio = async function (bio: string) {
+    const user = this;
+    user.bio = bio;
+    return user.save();
+}
 
 //find user by email
 userSchema.methods.findByEmail = async function (email: string) {
@@ -94,6 +115,20 @@ userSchema.methods.findByAddressOrEmail = async function (address: string, email
 // find user by address or email or username
 userSchema.methods.findByAddressOrEmailOrUsername = async function (address: string, email: string, username: string) {
     const user = await User.findOne({ $or: [{ address: address }, { email: email }, { username: username }] });
+    return user;
+}
+
+// find by objectId
+userSchema.methods.findById = async function (id: string) {
+    const user = await User.findById(id);
+    return user;
+}
+
+// populate user with posts
+userSchema.methods.populatePosts = async function () {
+    const user = this;
+    const posts = await Post.find({ authorId: user._id });
+    user.posts = posts;
     return user;
 }
 

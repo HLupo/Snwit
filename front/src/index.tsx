@@ -9,6 +9,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { useEffect } from 'react';
 import { setCurrentMetamaskAccount } from 'store/slices/appSlice';
 import { setUser, User } from 'store/slices/userSlice';
+import { useNavigate } from 'react-router';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -37,6 +38,8 @@ const Loading: React.FC = () => {
 
   useEffect(() => {
     const { ethereum } = window;
+
+
     if (ethereum) {
       ethereum.on("accountsChanged", async (accounts: string) => {
         dispatch(setCurrentMetamaskAccount(accounts[0]));

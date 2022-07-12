@@ -88,5 +88,66 @@ router.get("/getUserByAddress/:address", (req, res) => {
         res.send({ "err": err });
     });
 });
+// Get user by id
+router.get("/getUserById/:id", (req, res) => {
+    console.log("Endpoint hit");
+    const user = new User_1.User({
+        _id: req.params.id,
+    });
+    user.findById(user._id.toString()).then((results) => {
+        console.log("params = ", user._id);
+        if (results) {
+            res.statusCode = 200;
+            res.statusMessage = "User found";
+            console.log("User found /getUserById", results);
+            res.send({ "user": results });
+        }
+        else {
+            res.statusCode = 404;
+            res.statusMessage = "User not found";
+            console.log("User not found /getUserById");
+            res.send();
+        }
+    }).catch((err) => {
+        res.statusCode = 500;
+        res.statusMessage = "Internal Server Error";
+        console.log("Internal Server Error /getUserById", err);
+        res.send({ "err": err });
+    });
+});
+// Set user bio
+router.post("/setUserBio", (req, res) => {
+    const user = new User_1.User({
+        _id: req.body._id,
+        bio: req.body.bio,
+    });
+    user.findById(user._id.toString()).then((results) => {
+        console.log(results);
+        if (results) {
+            results.setBio(user.bio).then((results) => {
+                res.statusCode = 200;
+                res.statusMessage = "User bio updated";
+                console.log("User bio updated /setUserBio", results);
+                res.send({ "user": results });
+            }).catch((err) => {
+                res.statusCode = 500;
+                res.statusMessage = "Internal Server Error";
+                console.log("Internal Server Error /setUserBio", err);
+                res.send({ "err": err });
+            });
+        }
+        else {
+            res.statusCode = 404;
+            res.statusMessage = "User not found";
+            console.log("User not found /setUserBio");
+            res.send();
+        }
+    }).catch((err) => {
+        res.statusCode = 500;
+        res.statusMessage = "Internal Server Error";
+        console.log("Internal Server Error /setUserBio", err);
+        res.send({ "err": err });
+    });
+});
 exports.default = router;
 //# sourceMappingURL=UserRouter.js.map

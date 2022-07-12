@@ -1,14 +1,22 @@
-import App from 'App';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'store/store';
-import { MetamaskRequired } from 'components/MetamaskRequired';
-import SignUp from 'components/SignUp';
-import ConnectAccount from 'components/ConnectAccount';
 import { FC, ReactNode, useEffect } from 'react';
 
-import { clearAppState } from 'store/slices/appSlice';
 import { clearUserState } from 'store/slices/userSlice';
+import { clearAppState } from 'store/slices/appSlice';
+import { RootState } from 'store/store';
+
+import { MetamaskRequired } from 'components/MetamaskRequired';
+import { ConnectAccount } from 'components/ConnectAccount';
+import { Notifications } from "../views/Notifications";
+import { UserProfile } from "../views/UserProfile";
+import { Bookmarks } from "../views/Bookmarks";
+import { Messages } from "../views/Messages";
+import { NftView } from "../views/NftView";
+import { SignUp } from 'components/SignUp';
+import { Lists } from "../views/Lists";
+import { App } from 'App';
+
 
 type RequireAuthProps = { children: ReactNode };
 const RequireAuth: FC<RequireAuthProps> = ({ children }) => {
@@ -57,10 +65,19 @@ export const Router = () => {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path={"/"} element={<RequiredFlow><App /></RequiredFlow>} />
+                <Route path={"/"} element={<RequiredFlow><App /></RequiredFlow>}>
+                    <Route path={"/notifications"} element={<Notifications />} />
+                    <Route path={"/bookmarks"} element={<Bookmarks />} />
+                    <Route path={"/messages"} element={<Messages />} />
+                    <Route path={"/nft"} element={<NftView />} />
+                    <Route path={"/lists"} element={<Lists />} />
+
+                    <Route path={"/user/:id"} element={<UserProfile />} />
+                </Route>
                 <Route path={"metamask-required"} element={<MetamaskRequired />} />
                 <Route path={"connect-metamask-account"} element={<RequireMetamask><ConnectAccount /></RequireMetamask>} />
                 <Route path={"auth"} element={<RequireMetamask><RequireMetamaskAccount><SignUp /></RequireMetamaskAccount></RequireMetamask>} />
+
                 <Route path={"purge"} element={<PurgeComp />} />
             </Routes>
         </BrowserRouter>

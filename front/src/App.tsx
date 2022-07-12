@@ -1,6 +1,11 @@
+import { Outlet, useOutlet } from "react-router";
+import { Navbar } from "./components/Navbar";
 import { Flex } from "@chakra-ui/layout";
 
+import { Home } from "views/Home";
+
 export const App: React.FC = () => {
+  const outlet = useOutlet();
 
   // const currentAccount = useSelector((state: RootState) => state.app.currentMetamaskAccount);
   // const [sendAddress, setSendAddress] = useState("");
@@ -17,7 +22,7 @@ export const App: React.FC = () => {
   //     const add = await signer.getAddress();
 
   //     console.log("Add = ", add);
-  //     const myContract = new Contract(CONTRACT_ADRESS, TOKEN_FACTORY.interface, signer) as Token;
+  //     const myContract = new Contract(CONTRACT_ADRESS, new Interface("pathToJsonABI"), signer) as Token;
 
   //     const res = await myContract.balanceOf(add);
 
@@ -49,7 +54,15 @@ export const App: React.FC = () => {
 
   return (
     <Flex width={"100vw"} height={"100vh"} flexDir={"row"}>
-      {"Accueil"}
+      <Flex flex={1} borderRight={"1px"} borderColor={"lightgray"}>
+        <Navbar />
+      </Flex>
+      <Flex flex={1.5}>
+        {outlet ? <Outlet /> : <Home />}
+      </Flex>
+      <Flex flex={1} justifyContent={"center"} borderLeft={"1px"} borderColor={"lightgray"}>
+        <h1>{"news bla bla"}</h1>
+      </Flex>
     </Flex>
   )
 }

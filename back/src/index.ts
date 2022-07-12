@@ -3,7 +3,8 @@ import express from "express";
 import cors from "cors"
 
 import UserRouter from "./routes/UserRouter";
-import { IUser, User } from "./models/User"
+import PostRouter from "./routes/PostRouter"
+import NftRouter from "./routes/NftRouter"
 
 const app = express();
 const port = 8080; // default port to listen
@@ -22,3 +23,5 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/", UserRouter);
+app.use("/", PostRouter);
+app.use("/", NftRouter);

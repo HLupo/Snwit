@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const mongoose_1 = require("mongoose");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const Post_1 = require("./Post");
 const userSchema = new mongoose_1.Schema({
     email: {
         type: String,
@@ -32,6 +33,14 @@ const userSchema = new mongoose_1.Schema({
     address: {
         type: String,
         required: true,
+    },
+    pseudo: {
+        type: String,
+        default: null,
+    },
+    bio: {
+        type: String,
+        default: null
     },
 });
 userSchema.pre("save", function (next) {
@@ -61,6 +70,14 @@ userSchema.methods.comparePassword = function (candidatePassword) {
         catch (err) {
             throw new Error(err);
         }
+    });
+};
+// set user bio 
+userSchema.methods.setBio = function (bio) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const user = this;
+        user.bio = bio;
+        return user.save();
     });
 };
 //find user by email
@@ -102,6 +119,22 @@ userSchema.methods.findByAddressOrEmail = function (address, email) {
 userSchema.methods.findByAddressOrEmailOrUsername = function (address, email, username) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = yield exports.User.findOne({ $or: [{ address: address }, { email: email }, { username: username }] });
+        return user;
+    });
+};
+// find by objectId
+userSchema.methods.findById = function (id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const user = yield exports.User.findById(id);
+        return user;
+    });
+};
+// populate user with posts
+userSchema.methods.populatePosts = function () {
+    return __awaiter(this, void 0, void 0, function* () {
+        const user = this;
+        const posts = yield Post_1.Post.find({ authorId: user._id });
+        user.posts = posts;
         return user;
     });
 };
